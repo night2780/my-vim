@@ -3,7 +3,7 @@ syntax on
  " Colorscheme 
 set termguicolors
 set background=light
-colorscheme PaperColor
+colorscheme morning
 
 set tabstop=4                             
 set shiftwidth=4                        
@@ -20,6 +20,9 @@ set clipboard=unnamed
 set nu
 set splitbelow
 set splitright
+set complete+=kspell
+set completeopt=menuone,longest
+set shortmess+=c
 
 call plug#begin('~/vimfiles/plugged')
 Plug 'scrooloose/nerdtree'
@@ -33,8 +36,7 @@ Plug 'vim-syntastic/syntastic'
 Plug 'nvie/vim-flake8'
 " auto completion
 Plug 'maralla/completor.vim'
-"Plug 'Valloric/YouCompleteMe'
-
+Plug 'vim-scripts/AutoComplPop'
 call plug#end()
 
 
@@ -49,13 +51,16 @@ if has("gui_running")
     set guioptions -=T "Hides the toolbar
   endif
 endif
+" completor
+let g:completor_auto_trigger = 0
+inoremap <expr> <Tab> pumvisible() ? "<C-N>" : "<C-R>=completor#do('complete')<CR>"
 let g:syntastic_python_python_exec = 'python3' 
 let python_highlight_all=1
-let g:completor_python_binary = '/path/to/python/with/jedi/installed'
+let g:completor_python_binary = 'C:\Users\DELL\AppData\Local\Programs\Python\Python39'
 " YouCompleteMe
 let g:ycm_global_ycm_extra_conf='~/.vim/bundle/YouCompleteMe/.ycm_extra_conf.py'
 let g:ycm_confirm_extra_conf=0
-"let g:ycm_python_binary_path='Program Files/Python310/'
+let g:ycm_python_binary_path='C:\:Users\DELL\AppData\Local\Programs\Python\Python39'
 
 " " Fugitive vim remaps
 nmap <leader>gh :diffget //3<CR>
@@ -75,7 +80,8 @@ autocmd FileType python nnoremap <buffer> <F5> <esc>:w<CR>:vert ter python "%" <
 nnoremap <Leader>o o<Esc>
 nnoremap <Leader>O O<Esc>
 "Nerdtree
-nnoremap <C-n> :NERDTree
+nnoremap <F3> :Ex <CR>
+nnoremap <C-n> :NERDTree <CR>
 nnoremap <C-F2> :NERDTree % <CR>
 nnoremap <C-t> :terminal<CR>
 nnoremap py :!python %<CR>
@@ -83,7 +89,7 @@ nnoremap py :!python %<CR>
 nnoremap <C-Up> :m-2<CR>
 nnoremap <C-Down> :m+<CR>
 " resize buffer
-nnoremap <F7> :vertical resize +5<CR>
-nnoremap <F8> :vertical resize -5<CR>
+nnoremap <C-F7> :vertical resize +5<CR>
+nnoremap <C-F8> :vertical resize -5<CR>
 map <F2> :ls <CR>
 nmap <F4> :exit <CR>
