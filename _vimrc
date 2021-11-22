@@ -3,8 +3,111 @@ syntax on
  " Colorscheme 
 set termguicolors
 set background=light
-colorscheme morning
+colorscheme base16-nord
+"colorscheme papercolor
+"colorscheme morning
+"colorscheme base16-3024
+"colorscheme base16-dracula
+"base16-unikitty-light
+"Fav colorscheme
 
+"base16-ashes
+"base16-atelier-cave
+"base16-dune-light
+"base16-atelier-dune
+"base16-atelier-estuary
+"base16-atelier-forest
+"base16-atelier-heath
+"base16-atelier-lakeside
+"base16-atelier-plateau-light
+"base16-atelier-plateau
+"base16-atelier-savanna-light
+"base16-atelier-savanna
+"base16-atelier-seaside-light
+"base16-atelier-seaside
+"base16-atelier-sulphurpool-light
+"base16-atelier-sulphurpool
+"base16-atlas
+"base16-bespin
+"base16-brewer
+"base16-bright
+"base16-brogrammer
+"base16-brushtrees-dark
+"base16-brushtrees
+"base16-chalk
+"base16-circus
+"base16-classic-dark
+"base16-classic-light
+"base16-codeschool
+"base16-cupcake
+"base16-cupertino
+"base16-darktooth
+"base16-default-dark
+"base16-default-light
+"base16-eighties
+"base16-embers
+"base16-flat
+"base16-fruit-soda
+"base16-github
+"base16-grayscale-dark
+"base16-grayscale-light
+"base16-greenscreen
+"base16-gruvbox-dark-hard
+"base16-harmonic-dark
+"base16-harmonic-light
+"base16-heetch-light
+"base16-heetch
+"base16-helios
+"base16-hopscotch
+"base16-horizon-dark
+"base16-ia-dark
+"base16-irblack
+"base16-isotope
+"base16-macintosh
+"base16-marrakesh
+"base16-materia
+"base16-material-darker
+"base16-material-lighter
+"base16-material-palenight
+"base16-material-vivid
+"base16-material
+"base16-mellow-purple
+"base16-mexico-light
+"base16-mocha
+"base16-monokai
+"base16-ocean
+"base16-oceanicnext
+"base16-one-light
+"base16-onedark
+"base16-outrun-dark
+"base16-papercolor-dark
+"base16-papercolor-light
+"base16-paraiso
+"base16-phd
+"base16-pico
+"base16-pop
+"base16-porple
+"base16-railscasts
+"base16-rebecca
+"base16-seti
+"base16-shapeshifter
+"base16-snazzy
+"base16-solarflare
+"base16-solarized-dark
+"base16-solarized-light
+"base16-spacemacs
+"base16-summerfruit-dark
+"base16-summerfruit-light
+"base16-synth-midnight-dark
+"base16-tomorrow-night-eighties
+"base16-tomorrow-night
+"base16-tomorrow
+"base16-tube
+"base16-twilight
+"base16-unikitty-dark
+"base16-woodland
+"base16-xcode-dusk
+"colorscheme base16-zenb
 
 set linespace=4
 set tabstop=4                             
@@ -39,9 +142,10 @@ Plug 'NLKNguyen/papercolor-theme'
 Plug 'vim-syntastic/syntastic' 
 Plug 'nvie/vim-flake8'
 Plug 'terryma/vim-multiple-cursors'
+Plug 'jiangmiao/auto-pairs'
 " auto completion
 Plug 'maralla/completor.vim'
-Plug 'vim-scripts/AutoComplPop'
+"Plug 'vim-scripts/AutoComplPop'
 call plug#end()
 
 
@@ -51,7 +155,8 @@ if has("gui_running")
   elseif has("gui_macvim")
     set guifont=Menlo\ Regular:h14
   elseif has("gui_win32")
-    set guifont=Consolas:h12
+    "set guifont=Consolas:h12
+    set guifont=Source_Code_Pro:h14
     set guioptions -=m "Hides the menubar
     set guioptions -=T "Hides the toolbar
   endif
@@ -61,6 +166,15 @@ let g:completor_auto_trigger = 1
 let g:syntastic_python_exec = 'python3' 
 let python_highlight_all=1
 let g:completor_eython_binary = 'C:\Users\DELL\AppData\Local\Programs\Python\Python39'
+" syntastic"
+set statusline+=%#warningmsg#
+set statusline+=%{SyntasticStatuslineFlag()}
+set statusline+=%*
+let g:syntastic_python_checkers = ['pylint']
+"let g:syntastic_always_populate_loc_list = 1
+"let g:syntastic_auto_loc_list = 1
+"let g:syntastic_check_on_open = 1
+let g:syntastic_check_on_wq = 0
 "multiline cursor"
 "setting
 " Default highlighting (see help :highlight and help :highlight-link)
@@ -78,22 +192,17 @@ let g:multi_cursor_next_key            = '<C-n>'
 let g:multi_cursor_prev_key            = '<C-p>'
 let g:multi_cursor_skip_key            = '<C-x>'
 let g:multi_cursor_quit_key            = '<Esc>'
-
+"Cycle Colorscheme"
+nmap <F4>:call cyclecolor
 " Fugitive vim remaps
 nmap <leader>gh :diffget //3<CR>
 nmap <leader>gu :diffget //2<CR>
 nmap <leader>gs :G<CR>
-imap <tab> <C-t> 
 " editor to normal mode
 imap <C-i> <esc> 
 imap <A-j>  <esc> 
 " bracket AutoComple
-inoremap { {}<Esc>ha
-inoremap ( ()<Esc>ha
-inoremap [ []<Esc>ha
-inoremap " ""<Esc>ha
-inoremap ' ''<Esc>ha
-inoremap < <><Esc>ha
+
 "leave the bracket"
 inoremap <C-l> <esc>Ea
 "split navigations
@@ -125,8 +234,8 @@ nnoremap <F5> :NERDTreeRefreshRoot  <CR>
 nnoremap <F3><A-q> :NERDTreeClose  <CR>
 nnoremap py :!python %<CR>
 " move line up-down
-nnoremap <C-Up> :m-2<CR>
-nnoremap <C-Down> :m+<CR>
+nnoremap <C-k> :m-2<CR>
+nnoremap <C-j> :m+<CR>
 " resize buffer
 nnoremap <C-F7> :vertical resize +5<CR>
 map <F2> :ls <CR>
