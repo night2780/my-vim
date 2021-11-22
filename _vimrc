@@ -4,100 +4,6 @@ syntax on
 set termguicolors
 set background=light
 colorscheme base16-nord
-"colorscheme papercolor
-"colorscheme morning
-"colorscheme base16-3024
-"colorscheme base16-dracula
-"base16-unikitty-light
-"base16-gruvbox-dark-hard
-"Fav colorscheme
-
-"base16-ashes
-"base16-atelier-cave
-"base16-dune-light
-"base16-atelier-dune
-"base16-atelier-estuary
-"base16-atelier-forest
-"base16-atelier-heath
-"base16-atelier-plateau-light
-"base16-atelier-plateau
-"base16-atelier-seaside
-"base16-atelier-sulphurpool-light
-"base16-atelier-sulphurpool
-"base16-atlas
-"base16-bespin
-"base16-brewer
-"base16-bright
-"base16-brogrammer
-"base16-brushtrees-dark
-"base16-brushtrees
-"base16-chalk
-"base16-circus
-"base16-classic-dark
-"base16-classic-light
-"base16-codeschool
-"base16-cupertino
-"base16-darktooth
-"base16-default-dark
-"base16-default-light
-"base16-eighties
-"base16-flat
-"base16-fruit-soda
-"base16-github
-"base16-gruvbox-dark-pale
-"base16-harmonic-dark
-"base16-harmonic-light
-"base16-heetch-light
-"base16-heetch
-"base16-helios
-"base16-hopscotch
-"base16-horizon-dark
-"base16-ia-dark
-"base16-irblack
-"base16-isotope
-"base16-macintosh
-"base16-marrakesh
-"base16-materia
-"base16-material-darker
-"base16-material-lighter
-"base16-material-palenight
-"base16-material-vivid
-"base16-material
-"base16-mexico-light
-"base16-monokai
-"base16-ocean
-"base16-oceanicnext
-"base16-one-light
-"base16-onedark
-"base16-outrun-dark
-"base16-papercolor-dark
-"base16-papercolor-light
-"base16-paraiso
-"base16-phd
-"base16-pico
-"base16-pop
-"base16-porple
-"base16-railscasts
-"base16-rebecca
-"base16-seti
-"base16-shapeshifter
-"base16-snazzy
-"base16-solarflare
-"base16-solarized-dark
-"base16-solarized-light
-"base16-spacemacs
-"base16-summerfruit-dark
-"base16-summerfruit-light
-"base16-synth-midnight-dark
-"base16-tomorrow-night-eighties
-"base16-tomorrow-night
-"base16-tomorrow
-"base16-tube
-"base16-twilight
-"base16-unikitty-dark
-"base16-woodland
-"base16-xcode-dusk
-"colorscheme base16-zenb
 
 set linespace=4
 set tabstop=4                             
@@ -109,21 +15,31 @@ set autoindent
 set cursorline                              
 set showmatch                            
 set encoding=utf-8
+scriptencoding utf-8
 set backspace=2
 set laststatus=2
 set clipboard=unnamed
 set nu
 set splitbelow
 set splitright
+set shell=C:\\WINDOWS\\sysnative\\WindowsPowerShell\\v1.0\\powershell.exe
+set shellcmdflag=-c
+set shellpipe=>
+set shellredir=>
+"set showtabline=2
 "set complete+=kspell
 "set completeopt=menuone,longest
 "set shortmess+=c
-""set statusline=%<%f\ %h%m%r%{kite#statusline()}%=%-14.(%l,%c%V%)\ %P
 set laststatus=2  " always display the status line
-
 call plug#begin('~/vimfiles/plugged')
 Plug 'scrooloose/nerdtree'
+Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
+Plug 'junegunn/fzf.vim'
+"line plugin
 Plug 'itchyny/lightline.vim'
+Plug 'mengelbrecht/lightline-bufferline'
+Plug 'powerline/powerline'
+Plug 'tpope/vim-surround'
 Plug 'tpope/vim-fugitive'
 Plug 'vimwiki/vimwiki'
 Plug 'chriskempson/base16-vim'
@@ -146,12 +62,35 @@ if has("gui_running")
     set guifont=Menlo\ Regular:h14
   elseif has("gui_win32")
     "set guifont=Consolas:h12
-    set guifont=Source_Code_Pro:h12
+    set guifont=Source_Code_Pro:h13
+    "set guifont=Hack_Nerd_Font_Mono:h14
+    "set guifont=mononoki_Nerd_Font_Mono:h13
+    "set guifont=mononoki_Nerd_Font:h14
     set guioptions -=m "Hides the menubar
     set guioptions -=T "Hides the toolbar
   endif
 endif
-" SwitchColor
+" lightline
+let g:lightline = {
+      \ 'active': {
+      \   'left': [ [ 'mode', 'paste' ],
+      \             [ 'fugitive', 'readonly', 'filename', 'modified' ] ]
+      \ },
+      \ 'component': {
+      \   'readonly': '%{&filetype=="help"?"":&readonly?"⭤":""}',
+      \   'modified': '%{&filetype=="help"?"":&modified?"+":&modifiable?"":"-"}',
+      \   'fugitive': '%{exists("*fugitive#head")?fugitive#head():""}'
+      \ },
+      \ 'component_visible_condition': {
+      \   'readonly': '(&filetype!="help"&& &readonly)',
+      \   'modified': '(&filetype!="help"&&(&modified||!&modifiable))',
+      \   'fugitive': '(exists("*fugitive#head") && ""!=fugitive#head())'
+      \ },
+      \ 'separator': { 'left':" ", 'right': " " },
+      \ 'subseparator': { 'left': "\u2705", 'right': "\u2022" }
+      \ }
+
+"SwitchColor
 let loaded_switchcolor = 1
 let paths = split(globpath(&runtimepath, 'colors/*.vim'), "\n")
 let s:swcolors = map(paths, 'fnamemodify(v:val, ":t:r")')
@@ -198,19 +137,39 @@ imap <F8>   <Esc>:call SwitchColor(1)<CR>
 
  map <S-F8>      :call SwitchColor(-1)<CR>
 imap <S-F8> <Esc>:call SwitchColor(-1)<CR>
+" This is the default option:
+"   - Preview window on the right with 50% width
+"   - CTRL-/ will toggle preview window.
+" - Note that this array is passed as arguments to fzf#vim#with_preview function.
+" - To learn more about preview window options, see `--preview-window` section of `man fzf`.
+let g:fzf_preview_window = ['right:50%', 'ctrl-/']
+" Preview window on the upper side of the window with 40% height,
+" hidden by default, ctrl-/ to toggle
+let g:fzf_preview_window = ['up:40%:hidden', 'ctrl-/']
+" Empty value to disable preview window altogether
+let g:fzf_preview_window = []
+" [Buffers] Jump to the existing window if possible
+let g:fzf_buffers_jump = 1
+" [[B]Commits] Customize the options used by 'git log':
+let g:fzf_commits_log_options = '--graph --color=always --format="%C(auto)%h%d %s %C(black)%C(bold)%cr"'
+" [Tags] Command to generate tags file
+let g:fzf_tags_command = 'ctags -R'
+" [Commands] --expect expression for directly executing the command
+let g:fzf_commands_expect = 'alt-enter,ctrl-x'
 " completor
-let g:completor_auto_trigger = 1
-let g:syntastic_python_exec = 'python3' 
+let g:python_highlight_all=1
+let g:completor_auto_trigger=1
+let g:syntastic_python_exec='python3' 
 let python_highlight_all=1
-let g:completor_eython_binary = 'C:\Users\DELL\AppData\Local\Programs\Python\Python39'
+let g:completor_eython_binary='C:\Users\DELL\AppData\Local\Programs\Python\Python39'
 " syntastic"
 set statusline+=%#warningmsg#
 set statusline+=%{SyntasticStatuslineFlag()}
-set statusline+=%*
-let g:syntastic_python_checkers = ['pylint']
+"set statusline+=%*
+"let g:syntastic_python_checkers = ['pylint']
 "let g:syntastic_always_populate_loc_list = 1
 "let g:syntastic_auto_loc_list = 1
-"let g:syntastic_check_on_open = 1
+let g:syntastic_check_on_open = 1
 let g:syntastic_check_on_wq = 0
 "multiline cursor"
 "setting
@@ -229,8 +188,6 @@ let g:multi_cursor_next_key            = '<C-n>'
 let g:multi_cursor_prev_key            = '<C-p>'
 let g:multi_cursor_skip_key            = '<C-x>'
 let g:multi_cursor_quit_key            = '<Esc>'
-"Cycle Colorscheme"
-nmap <F4>:call cyclecolor
 " Fugitive vim remaps
 nmap <leader>gh :diffget //3<CR>
 nmap <leader>gu :diffget //2<CR>
@@ -238,7 +195,6 @@ nmap <leader>gs :G<CR>
 " editor to normal mode
 imap <C-i> <esc> 
 imap <A-j>  <esc> 
-
 "leave the bracket"
 inoremap <C-l> <esc>Ea
 "split navigations
@@ -247,9 +203,9 @@ nnoremap <C-K> <C-W><C-K>
 nnoremap <C-L> <C-W><C-L>
 nnoremap <C-H> <C-W><C-H>
 "python complier
-autocmd FileType  python map <buffer> <F9> :w<CR>:exec '!python %' <CR>
-autocmd FileType  python imap <buffer> <F9> <esc>:w<CR>:exec '!python %'<CR>
-autocmd Filetype  python nnoremap <buffer> <F6> <esc> :w <CR> :ter python "%"<CR>
+autocmd FileType  python map <buffer> <F9> :w<CR>:exec'!python %'<CR>
+autocmd FileType  python imap <buffer> <F9> <esc>:w<CR>:!python %<CR>
+autocmd Filetype  python nnoremap <buffer> <F6> <esc> :w <CR>:ter python "%"<CR><A-q>
 autocmd FileType  python nnoremap <buffer> <F5> <esc>:w<CR>:vert ter python "%" <CR>
 " Full screen 
 map <F11> <Esc>:call libcallnr("gvimfullscreen.dll", "ToggleFullScreen", 0)<CR>
@@ -260,16 +216,16 @@ inoremap <A-h> <left>
 inoremap <A-l> <Right>
 "Nerdtree
 nnoremap <F3> :NERDTree
-nnoremap <C-F3> :NERDTreeToggle <CR> 
-nnoremap <M-F3> :NERDTreeFocus <CR> 
-nnoremap <F3><A-q> :NERDTreeClose  <CR>
-nnoremap <F5> :NERDTreeRefreshRoot  <CR>
-nnoremap <F3><A-q> :NERDTreeClose  <CR>
+nnoremap <M-F3> :NERDTreeToggle<CR> 
+nnoremap <C-F3> :NERDTreeFocus<CR> 
+nnoremap <F3><A-q> :NERDTreeClose<CR>
+nnoremap <C-F5> :NERDTreeRefreshRoot<CR>
+nnoremap <S-F3> :NERDTreeFrombookmark<CR>
 nnoremap py :!python %<CR>
 " move line up-down
-nnoremap <C-k> :m-2<CR>
-nnoremap <C-j> :m+<CR>
-" resize buffer
+nnoremap <A-k> :m-2<CR>
+nnoremap <A-j> :m+<CR>
+"resize buffer
 nnoremap <C-F7> :vertical resize +10<CR>
 nnoremap <C-F6> :vertical resize -10<CR>
 
