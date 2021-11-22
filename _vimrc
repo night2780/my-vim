@@ -9,6 +9,7 @@ colorscheme base16-nord
 "colorscheme base16-3024
 "colorscheme base16-dracula
 "base16-unikitty-light
+"base16-gruvbox-dark-hard
 "Fav colorscheme
 
 "base16-ashes
@@ -18,12 +19,8 @@ colorscheme base16-nord
 "base16-atelier-estuary
 "base16-atelier-forest
 "base16-atelier-heath
-"base16-atelier-lakeside
 "base16-atelier-plateau-light
 "base16-atelier-plateau
-"base16-atelier-savanna-light
-"base16-atelier-savanna
-"base16-atelier-seaside-light
 "base16-atelier-seaside
 "base16-atelier-sulphurpool-light
 "base16-atelier-sulphurpool
@@ -39,20 +36,15 @@ colorscheme base16-nord
 "base16-classic-dark
 "base16-classic-light
 "base16-codeschool
-"base16-cupcake
 "base16-cupertino
 "base16-darktooth
 "base16-default-dark
 "base16-default-light
 "base16-eighties
-"base16-embers
 "base16-flat
 "base16-fruit-soda
 "base16-github
-"base16-grayscale-dark
-"base16-grayscale-light
-"base16-greenscreen
-"base16-gruvbox-dark-hard
+"base16-gruvbox-dark-pale
 "base16-harmonic-dark
 "base16-harmonic-light
 "base16-heetch-light
@@ -71,9 +63,7 @@ colorscheme base16-nord
 "base16-material-palenight
 "base16-material-vivid
 "base16-material
-"base16-mellow-purple
 "base16-mexico-light
-"base16-mocha
 "base16-monokai
 "base16-ocean
 "base16-oceanicnext
@@ -156,11 +146,58 @@ if has("gui_running")
     set guifont=Menlo\ Regular:h14
   elseif has("gui_win32")
     "set guifont=Consolas:h12
-    set guifont=Source_Code_Pro:h14
+    set guifont=Source_Code_Pro:h12
     set guioptions -=m "Hides the menubar
     set guioptions -=T "Hides the toolbar
   endif
 endif
+" SwitchColor
+let loaded_switchcolor = 1
+let paths = split(globpath(&runtimepath, 'colors/*.vim'), "\n")
+let s:swcolors = map(paths, 'fnamemodify(v:val, ":t:r")')
+let s:swskip = [ '256-jungle', '3dglasses', 'calmar256-light', 'coots-beauty-256', 'grb256' ]
+let s:swback = 0    " background variants light/dark was not yet switched
+let s:swindex = 0
+
+function! SwitchColor(swinc)
+
+	" if have switched background: dark/light
+	if (s:swback == 1)
+		let s:swback = 0
+		let s:swindex += a:swinc
+		let i = s:swindex % len(s:swcolors)
+
+		" in skip list
+		if (index(s:swskip, s:swcolors[i]) == -1)
+			execute "colorscheme " . s:swcolors[i]
+		else
+			return SwitchColor(a:swinc)
+		endif
+
+	else
+		let s:swback = 1
+		if (&background == "light")
+			execute "set background=dark"
+		else
+			execute "set background=light"
+		endif
+
+		" roll back if background is not supported
+		if (!exists('g:colors_name'))
+			return SwitchColor(a:swinc)
+		endif
+	endif
+
+	" show current name on screen. :h :echo-redraw
+	redraw
+	execute "colorscheme"
+endfunction
+
+ map <F8>        :call SwitchColor(1)<CR>
+imap <F8>   <Esc>:call SwitchColor(1)<CR>
+
+ map <S-F8>      :call SwitchColor(-1)<CR>
+imap <S-F8> <Esc>:call SwitchColor(-1)<CR>
 " completor
 let g:completor_auto_trigger = 1
 let g:syntastic_python_exec = 'python3' 
@@ -201,7 +238,6 @@ nmap <leader>gs :G<CR>
 " editor to normal mode
 imap <C-i> <esc> 
 imap <A-j>  <esc> 
-" bracket AutoComple
 
 "leave the bracket"
 inoremap <C-l> <esc>Ea
@@ -217,9 +253,6 @@ autocmd Filetype  python nnoremap <buffer> <F6> <esc> :w <CR> :ter python "%"<CR
 autocmd FileType  python nnoremap <buffer> <F5> <esc>:w<CR>:vert ter python "%" <CR>
 " Full screen 
 map <F11> <Esc>:call libcallnr("gvimfullscreen.dll", "ToggleFullScreen", 0)<CR>
-"new line insert
-nnoremap <Leader>o o<Esc>
-nnoremap <Leader>O O<Esc>
 "insert cursor move"
 inoremap <A-k> <Up>
 inoremap <A-j> <Down>
@@ -237,7 +270,9 @@ nnoremap py :!python %<CR>
 nnoremap <C-k> :m-2<CR>
 nnoremap <C-j> :m+<CR>
 " resize buffer
-nnoremap <C-F7> :vertical resize +5<CR>
+nnoremap <C-F7> :vertical resize +10<CR>
+nnoremap <C-F6> :vertical resize -10<CR>
+
 map <F2> :ls <CR>
 nmap <q><q> :exit <CR>
 nmap <A-q> :close <CR>
