@@ -13,29 +13,33 @@ syntax on
 :set showtabline=2
 :set cursorline                              
 :set showmatch 
-set encoding=UTF-8
+:set encoding=UTF-8
+
 
 call plug#begin()
 
 Plug 'http://github.com/tpope/vim-surround' " Surrounding ysw)
 Plug 'jiangmiao/auto-pairs'
 Plug 'https://github.com/preservim/nerdtree' " NerdTree
-Plug 'https://github.com/tpope/vim-commentary' " For Commenting gcc & gc
-Plug 'https://github.com/lifepillar/pgsql.vim' " PSQL Pluging needs :SQLSetType pgsql.vim
+"Plug 'https://github.com/tpope/vim-commentary' " For Commenting gcc & gc
+"Plug 'https://github.com/lifepillar/pgsql.vim' " PSQL Pluging needs :SQLSetType pgsql.vim
 Plug 'https://github.com/ap/vim-css-color' " CSS Color Preview
 Plug 'https://github.com/rafi/awesome-vim-colorschemes' " Retro Scheme
 Plug 'mangeshrex/uwu.vim' " uwu scheme
+Plug 'https://github.com/morhetz/gruvbox' "Gruvbox scheme
+Plug 'https://github.com/vim-python/python-syntax' "python syntax hilighting
 Plug 'https://github.com/neoclide/coc.nvim'  " Auto Completion
 Plug 'https://github.com/ryanoasis/vim-devicons' " Developer Icons
 Plug 'https://github.com/tc50cal/vim-terminal' " Vim Terminal
 Plug 'https://github.com/preservim/tagbar' " Tagbar for code navigation
 Plug 'https://github.com/terryma/vim-multiple-cursors' " CTRL + N for multiple cursors
 Plug 'https://github.com/vim-airline/vim-airline' " Status bar
-Plug 'https://github.com/vim-airline/vim-airline-themes' " Status bar themes
 Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
 Plug 'junegunn/fzf.vim'
 Plug 'tpope/vim-fugitive' " git command
 Plug 'https://github.com/jbgutierrez/vim-better-comments'
+Plug 'mhinz/vim-startify' "neovim start page
+Plug 'leafoftree/vim-run' " vimrun code
 
 call plug#end()
 
@@ -47,9 +51,12 @@ nnoremap <C-l> :call CocActionAsync('jumpDefinition')<CR>
 nmap <F8> :TagbarToggle<CR>
 
 :set completeopt-=preview " For No Previews
+:set completeopt=longest,menuone
 
-:colorscheme onehalfdark
+:colorscheme gruvbox
+let g:gruvbox_contrast_dark = ('hard')
 :set termguicolors
+:set background=dark
 
 let g:NERDTreeDirArrowExpandable="+"
 let g:NERDTreeDirArrowCollapsible="~"
@@ -62,11 +69,7 @@ let g:NERDTreeDirArrowCollapsible="~"
 " :CocInstall coc-snippets
 " :CocCommand snippets.edit... FOR EACH FILE TYPE
 
-" better comments
-let g:bettercomments_language_aliases = { 'python': 'py' }
-
 " air-line
-"let g:airline_themes='onedark'
 let g:airline_powerline_fonts = 1
 let g:airline#extensions#whitespace#enabled = 0
 let g:airline#extensions#tabline#enabled = 1
@@ -75,30 +78,20 @@ if !exists('g:airline_symbols')
    let g:airline_symbols = {}
 endif
 
-" Unicode symbols
-"let g:airline_symbols.linenr = '␊'
-""let g:airline_symbols.linenr = '␤'
-"let g:airline_symbols.linenr = '¶'
-let g:airline_symbols.paste = 'ρ'
-let g:airline_symbols.paste = 'Þ'
-let g:airline_symbols.paste = '∥'
-let g:airline_symbols.whitespace = 'Ξ'
+" syntax hilighting
+let g:python_highlight_all = 1
 
-" airline symbols
-let g:airline_left_sep = ''
-let g:airline_left_alt_sep = ' '
-let g:airline_right_sep = ''
-let g:airline_right_alt_sep = ' 🖋 '
-let g:airline_symbols.branch = ''
-let g:airline_symbols.readonly = ''
-let g:airline_symbols.linenr = ' 🕮 :'
-"let g:airline_symbols.linenr = ' :'
-let g:airline_symbols.dirty='⚡'
-let g:airline_symbols.maxlinenr = ' '
-"let g:airline_section_z = airline#section#create(['🕮  '.'%{line('.'')}' .":". '%{col(".")}'])
+" better comments
+let g:bettercomments_language_aliases = { 'python': 'py' }
+
+"one line comments
+nnoremap <A-/> I# <esc>
+" multilline comments
+vmap <F2> <C-n> I# <esc>
 
 " fzf Fuzzy files
 nnoremap <C-p> :Files<Cr>
+nnoremap <C-b> :Buffers<Cr>
 
 " Fugitive vim remaps
 nmap <leader>gh :diffget //3<CR>
@@ -121,9 +114,8 @@ nnoremap <C-K> <C-W><C-K>
 nnoremap <C-L> <C-W><C-L>
 nnoremap <C-H> <C-W><C-H>
 
-nnoremap <buffer> <F6>:w <CR>:!python3 %<CR>
-nnoremap <C-F6> :w <CR>:vert ter python3 %<CR>
-inoremap <buffer> <C-F5> <esc> :w <CR>:!python3 %<CR>
-nnoremap <F5> :w <CR>:!python3 %<CR>
+nnoremap <C-F2> :CocCommand workspace.renameCurrentFile<CR> 
+nnoremap <F9> :CocCommand python.execInTerminal<CR> <C-j>
+nnoremap <F6> :w <CR>:!python3 %<CR>
 
 inoremap <expr> <Tab> pumvisible() ? coc#_select_confirm() : "<Tab>"
