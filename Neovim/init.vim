@@ -15,7 +15,6 @@ syntax on
 :set showmatch 
 :set encoding=UTF-8
 
-
 call plug#begin()
 
 Plug 'http://github.com/tpope/vim-surround' " Surrounding ysw)
@@ -27,17 +26,17 @@ Plug 'https://github.com/ap/vim-css-color' " CSS Color Preview
 Plug 'https://github.com/rafi/awesome-vim-colorschemes' " Retro Scheme
 Plug 'mangeshrex/uwu.vim' " uwu scheme
 Plug 'https://github.com/morhetz/gruvbox' "Gruvbox scheme
+Plug 'tomasiser/vim-code-dark' "codedark
 Plug 'https://github.com/vim-python/python-syntax' "python syntax hilighting
 Plug 'https://github.com/neoclide/coc.nvim'  " Auto Completion
 Plug 'https://github.com/ryanoasis/vim-devicons' " Developer Icons
-Plug 'https://github.com/tc50cal/vim-terminal' " Vim Terminal
 Plug 'https://github.com/preservim/tagbar' " Tagbar for code navigation
 Plug 'https://github.com/terryma/vim-multiple-cursors' " CTRL + N for multiple cursors
 Plug 'https://github.com/vim-airline/vim-airline' " Status bar
 Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
 Plug 'junegunn/fzf.vim'
 Plug 'tpope/vim-fugitive' " git command
-Plug 'https://github.com/jbgutierrez/vim-better-comments'
+Plug 'https://github.com/jbgutierrez/vim-better-comments' "bettercommemt
 Plug 'mhinz/vim-startify' "neovim start page
 Plug 'leafoftree/vim-run' " vimrun code
 
@@ -53,7 +52,7 @@ nmap <F8> :TagbarToggle<CR>
 :set completeopt-=preview " For No Previews
 :set completeopt=longest,menuone
 
-:colorscheme gruvbox
+:colorscheme codedark
 let g:gruvbox_contrast_dark = ('hard')
 :set termguicolors
 :set background=dark
@@ -70,6 +69,7 @@ let g:NERDTreeDirArrowCollapsible="~"
 " :CocCommand snippets.edit... FOR EACH FILE TYPE
 
 " air-line
+"let g:airline_theme = 'codedark'
 let g:airline_powerline_fonts = 1
 let g:airline#extensions#whitespace#enabled = 0
 let g:airline#extensions#tabline#enabled = 1
@@ -86,12 +86,25 @@ let g:bettercomments_language_aliases = { 'python': 'py' }
 
 "one line comments
 nnoremap <A-/> I# <esc>
-" multilline comments
-vmap <F2> <C-n> I# <esc>
 
 " fzf Fuzzy files
 nnoremap <C-p> :Files<Cr>
-nnoremap <C-b> :Buffers<Cr>
+nnoremap <C-b>f :Buffers<Cr>
+nnoremap <C-b>l :BLines<Cr>
+
+" buffer (next, previous)
+nnoremap <A-b>n :bNext! <CR>
+nnoremap <A-b>b  :bprevious! <CR>
+nnoremap <C-b>d  :bd! <CR>
+nnoremap <A-1>  :b1 <CR>
+nnoremap <A-2>  :b2 <CR>
+nnoremap <A-3>  :b3 <CR>
+nnoremap <A-4>  :b4 <CR>
+nnoremap <A-5>  :b5 <CR>
+nnoremap <A-6>  :b6 <CR>
+nnoremap <A-7>  :b7 <CR>
+nnoremap <A-8>  :b8 <CR>
+nnoremap <A-9>  :b9 <CR>
 
 " Fugitive vim remaps
 nmap <leader>gh :diffget //3<CR>
@@ -107,15 +120,16 @@ inoremap <A-k> <Up>
 inoremap <A-j> <Down>
 inoremap <A-h> <left>
 inoremap <A-l> <Right>
-
+ 
 "split navigations
 nnoremap <C-J> <C-W><C-J>
 nnoremap <C-K> <C-W><C-K>
 nnoremap <C-L> <C-W><C-L>
 nnoremap <C-H> <C-W><C-H>
 
-nnoremap <C-F2> :CocCommand workspace.renameCurrentFile<CR> 
-nnoremap <F9> :CocCommand python.execInTerminal<CR> <C-j>
-nnoremap <F6> :w <CR>:!python3 %<CR>
+nnoremap <F2> :CocCommand workspace.renameCurrentFile<CR> 
+nnoremap <F9> :CocCommand python.execInTerminal<CR> 
+nnoremap <F5> :w <CR>:!python3 %<CR>
+nnoremap <F6> :w <CR>:terminal python3 %<CR> i 
 
 inoremap <expr> <Tab> pumvisible() ? coc#_select_confirm() : "<Tab>"
