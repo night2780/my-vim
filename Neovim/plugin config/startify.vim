@@ -9,15 +9,36 @@ if exists('g:loaded_startify') || &cp
 endif
 let g:loaded_startify = 1
 let g:startify_locked = 0
-let g:startify_custom_header = [
-            \ '                                 ________  __ __        ',
-            \ '            __                  /\_____  \/\ \\ \       ',
-            \ '    __  __ /\_\    ___ ___      \/___//''/''\ \ \\ \    ',
-            \ '   /\ \/\ \\/\ \ /'' __` __`\        /'' /''  \ \ \\ \_ ',
-            \ '   \ \ \_/ |\ \ \/\ \/\ \/\ \      /'' /''__  \ \__ ,__\',
-            \ '    \ \___/  \ \_\ \_\ \_\ \_\    /\_/ /\_\  \/_/\_\_/  ',
-            \ '     \/__/    \/_/\/_/\/_/\/_/    \//  \/_/     \/_/    ',
-            \ ]
+let s:header = [
+      \ '',
+      \ '                       __         _    _        _    _      _         _      ',
+      \ '                      / /    ___ | |_ ( ) ___  | |_ | |__  (_) _ __  | | __  ',
+      \ '                     / /    / _ \| __||/ / __| | __|| |_ \ | || |_ \ | |/ /  ',
+      \ '                    / /___ |  __/| |_    \__ \ | |_ | | | || || | | ||   <   ',
+      \ '                    \____/  \___| \__|   |___/  \__||_| |_||_||_| |_||_|\_\  ',
+      \ '                                                                             ',
+      \ '                                 [ ThinkVim   Author:taigacute ]             ',
+      \ '',
+      \ ]
+
+let s:footer = [
+      \ '                     +-------------------------------------------+',
+      \ '                     |            ThinkVim ^_^                   |',
+      \ '                     |    Talk is cheap Show me the code         |',
+      \ '                     |                                           |',
+      \ '                     |            GitHub:taigacute               |',
+      \ '                     +-------------------------------------------+',
+      \ ]
+
+function! s:center(lines) abort
+  let longest_line   = max(map(copy(a:lines), 'strwidth(v:val)'))
+  let centered_lines = map(copy(a:lines),
+        \ 'repeat(" ", (&columns / 2) - (longest_line / 2)) . v:val')
+  return centered_lines
+endfunction
+
+let g:startify_custom_header = s:center(s:header)
+let g:startify_custom_footer = s:center(s:footer)
 if !get(g:, 'startify_disable_at_vimenter') && (!has('nvim') || has('nvim-0.3.5'))
   " Only for Nvim v0.3.5+: https://github.com/neovim/neovim/issues/9885
   set shortmess+=I
@@ -75,7 +96,8 @@ let g:startify_lists = [
         \ { 'header': ['   MRU'],            'type': 'files' },
         \ { 'header': ['   MRU '. getcwd()], 'type': 'dir' },
         \ { 'header': ['   Sessions'],       'type': 'sessions' },
-        \ { 'header': ['   Commits'],        'type': function('s:list_commits') },
+        \ { 'header': ['   Bookmarks']       'type': 'bookmarks',    },
+        \ { 'header': ['   Commands']        'type': 'commands',     },
         \ ]
 command! -nargs=? -bar -bang -complete=customlist,startify#session_list SLoad   call startify#session_load(<bang>0, <f-args>)
 command! -nargs=? -bar -bang -complete=customlist,startify#session_list SSave   call startify#session_save(<bang>0, <f-args>)
